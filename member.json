@@ -1,0 +1,9 @@
+{
+    "name": "ExampleName",
+    "surname": "ExampleSurname",
+    "roleDescription": "ExampleDescription",
+    "id": -1,
+    "sonsId": -1,
+    "parentsId": -1,
+    "groups": []
+}

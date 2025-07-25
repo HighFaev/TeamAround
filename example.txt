@@ -1,0 +1,11 @@
+[TopA_ TopB_ TopC_] - description1
+|
+|-|-[MiddleD_ MiddleE_ MiddleF_] - description2
+| |
+| |---[LowG_ LowH_] - description3
+| |
+| \-|-[LowI_] - description4
+|   |
+|   \-[SudentP_] - descripion5
+|
+\----[Marketing1, Marketing2] - description6
