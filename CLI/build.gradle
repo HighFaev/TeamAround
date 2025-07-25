@@ -5,3 +5,11 @@ plugins {
 application{
     mainClass = "com.highfaev.CLI_MAIN"
 }
+
+repositories{
+    mavenCentral()
+}
+
+dependencies{
+    implementation 'org.postgresql:postgresql:42.4.0'
+}
