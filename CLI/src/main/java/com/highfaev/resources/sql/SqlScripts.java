@@ -10,4 +10,5 @@ public class SqlScripts {
                 "telegram character varying(32)," +
                 "bio text" +
                 ");";
+    public static String insertToUsers = "INSERT INTO users (nickname, first_name, last_name, email, telegram, bio) VALUES (?, ?, ?, ?, ?, ?)";
 }

@@ -8,6 +8,6 @@ public class TablesCreator {
     public static void createUsersTable(Connection connection)
     {
         String sqlScript = SqlScripts.createUsersTable;
-        SqlWrapper.sqlRunner(connection, sqlScript);
+        SqlWrapper.runSqlScript(connection, sqlScript);
     }
 }

@@ -1,6 +1,9 @@
 package com.highfaev.resources.sql;
 
-public class User {
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class User implements BasicSqlInterface{
     private int user_id;
     private String nickname;
     private String first_name;
@@ -18,5 +21,54 @@ public class User {
         this.email = email;
         this.telegram = telegram;
         this.bio = bio;
+    }
+
+    public void printData()
+    {
+        System.out.printf("USER_DATA: user_id:%s nickname:%s first_name:%s last_name:%s email:%s telegram:%s bio:%s",
+                            this.user_id, this.nickname, this.first_name, this.last_name, this.email, this.telegram, this.bio);
+    }
+
+    public void fillStatement(PreparedStatement preparedStatement)
+    {
+        try {
+            preparedStatement.setString(1, this.nickname);
+            preparedStatement.setString(2, this.first_name);
+            preparedStatement.setString(3, this.last_name);
+            preparedStatement.setString(4, this.email);
+            preparedStatement.setString(5, this.telegram);
+            preparedStatement.setString(6, this.bio);
+        } catch (SQLException e) {
+            System.out.println("CANNT INSERT DATA INTO STATEMENT");
+        }
+    }
+
+    public int getUserId()
+    {
+        return this.user_id;
+    }
+    public String getNickname()
+    {
+        return this.nickname;
+    }
+    public String getFirstName()
+    {
+        return this.first_name;
+    }
+    public String getLastName()
+    {
+        return this.last_name;
+    }
+    public String getEmail()
+    {
+        return this.email;
+    }
+    public String getTelegram()
+    {
+        return this.telegram;
+    }
+    public String getBio()
+    {
+        return this.bio;
     }
 }
