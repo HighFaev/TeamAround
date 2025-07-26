@@ -1,6 +1,7 @@
 package com.highfaev.resources.sql;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class User implements BasicSqlInterface{
@@ -12,6 +13,10 @@ public class User implements BasicSqlInterface{
     private String telegram;
     private String bio;
 
+    public User()
+    {
+        //Empty constructor
+    }
     public User(int user_id, String nickname, String first_name, String last_name, String email, String telegram, String bio)
     {
         this.user_id = user_id;
@@ -25,11 +30,11 @@ public class User implements BasicSqlInterface{
 
     public void printData()
     {
-        System.out.printf("USER_DATA: user_id:%s nickname:%s first_name:%s last_name:%s email:%s telegram:%s bio:%s",
+        System.out.printf("USER_DATA: user_id:%s nickname:%s first_name:%s last_name:%s email:%s telegram:%s bio:%s\n",
                             this.user_id, this.nickname, this.first_name, this.last_name, this.email, this.telegram, this.bio);
     }
 
-    public void fillStatement(PreparedStatement preparedStatement)
+    public void fillInsertStatement(PreparedStatement preparedStatement)
     {
         try {
             preparedStatement.setString(1, this.nickname);
@@ -39,8 +44,26 @@ public class User implements BasicSqlInterface{
             preparedStatement.setString(5, this.telegram);
             preparedStatement.setString(6, this.bio);
         } catch (SQLException e) {
-            System.out.println("CANNT INSERT DATA INTO STATEMENT");
+            System.out.println("CANNT INSERT DATA INTO STATEMENT " + e.getMessage());
         }
+    }
+
+    public void parseOutputData(ResultSet resultSet)
+    {
+        try {
+            this.user_id = Integer.parseInt(resultSet.getString("user_id"));
+            this.nickname = resultSet.getString("nickname");
+            this.first_name = resultSet.getString("first_name");
+            this.last_name = resultSet.getString("last_name");
+            this.email = resultSet.getString("email");
+            this.telegram = resultSet.getString("telegram");
+            this.bio = resultSet.getString("bio");
+        }
+        catch(SQLException e)
+        {
+            System.out.println("CANNT PARSE DATA IN users" + e.getMessage());
+        }
+
     }
 
     public int getUserId()

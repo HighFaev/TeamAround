@@ -2,7 +2,6 @@ package com.highfaev;
 
 import java.sql.Connection;
 
-import com.highfaev.additional.TablesCreator;
 import com.highfaev.resources.helpers.SqlWrapper;
 import com.highfaev.resources.sql.*;
 
@@ -34,18 +33,22 @@ public class CLI_MAIN {
             case "create-db":
                 cliMain.createDB(args);
                 break;
+            case "get-users":
+                cliMain.getUsers(args);
+                break;
             case "--help":
                 cliMain.printInfo();
                 break;
             default:
-                System.out.println("Unknow first parametr. use --help argument to get info");
+                System.out.println("Unknown first parametr. use --help argument to get info");
                 break;
         }
     }
     private void printInfo()
     {
-        System.out.println("add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separete lines\n"+
-                            "create-db //Use to create database on your postgresql server.\n");
+        System.out.println("add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separate lines\n"+
+                            "create-db //Use to create database on your postgresql server.\n"+
+                            "get-users //Use to get all data from users table" );
     }
     private void addUser(String[] args) throws Exception
     {
@@ -58,5 +61,9 @@ public class CLI_MAIN {
     private void createDB(String[] args)
     {
         SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTable);
+    }
+    private void getUsers(String[] args)
+    {
+        SqlWrapper.getData(connection, SqlScripts.getAllUsers, User.class).printTable();
     }
 }

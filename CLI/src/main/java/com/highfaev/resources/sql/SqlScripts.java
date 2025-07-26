@@ -9,6 +9,7 @@ public class SqlScripts {
                 "email text NOT NULL," +
                 "telegram character varying(32)," +
                 "bio text" +
-                ");";
+                ")";
     public static String insertToUsers = "INSERT INTO users (nickname, first_name, last_name, email, telegram, bio) VALUES (?, ?, ?, ?, ?, ?)";
+    public static String getAllUsers = "SELECT * FROM users";
 }
