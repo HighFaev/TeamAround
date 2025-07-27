@@ -13,6 +13,11 @@ public class CLI_MAIN {
     public CLI_MAIN()
     {
         this.connection = SqlWrapper.connectToDatabase(this.databaseUrl, this.username, this.password);
+        try {
+            SqlScripts.initialize();
+        } catch (Exception e) {
+            System.out.println("Error while trying to initialize SqlScripts! " + e.getMessage());
+        }
     }
     public static void main(String[] args)
     {
@@ -52,11 +57,7 @@ public class CLI_MAIN {
     }
     private void addUser(String[] args) throws Exception
     {
-        if(args.length != 7)
-        {
-            throw new Exception("Wrong amount of arguments. Use --help");
-        }
-        SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, new User(-1, args[1], args[2], args[3], args[4], args[5], args[6]));
+        SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, User.create(args));
     }
     private void createDB(String[] args)
     {

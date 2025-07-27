@@ -2,11 +2,14 @@ package com.highfaev.resources.helpers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import com.highfaev.resources.sql.*;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import com.highfaev.resources.sql.*;
+import lombok.Cleanup;
 
 public class SqlWrapper {
     public static Connection connectToDatabase(String url, String name, String password)
@@ -24,50 +27,51 @@ public class SqlWrapper {
         }
         
     }
-    public static void runSqlScript(Connection connection, String SqlScript)
+    public static void runSqlScript(Connection connection, String sqlScript)
     {
         try
         {
-            connection.createStatement().execute(SqlScript);
+            connection.createStatement().execute(sqlScript);
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT RUN SQL SCRIPT:\n" + SqlScript + "\nERROR CODE:\n" + e.getMessage());
+            System.out.println("CANNT RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
         }
         return;
     }
-    public static <InsertClass extends BasicSqlInterface> void insertData(Connection connection, String SqlScript, InsertClass insertClass)
+    public static <InsertClass extends BasicSqlClassInterface> void insertData(Connection connection, String sqlScript, InsertClass insertClass)
     {
         try
         {
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlScript);
-            insertClass.fillInsertStatement(preparedStatement);
+            @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
+            insertClass.fillInsertParameters(preparedStatement);
             preparedStatement.execute();
         }
         catch (SQLException e)
         {
-            System.out.println("CANNT INSERT DATA. SCRIPT:\n" + SqlScript + "\nERROR CODE:\n" + e.getMessage());
+            System.out.println("CANNT INSERT DATA. SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
         }
     }
     
-    public static <OutputClass extends BasicSqlInterface> Table<OutputClass> getData(Connection connection, String SqlScript, Class<OutputClass> outputClass)
+    public static <OutputClass extends BasicSqlClassInterface> Table<OutputClass> getData(Connection connection, String sqlScript, Class<OutputClass> outputClass)
     {
         try
         {
-            PreparedStatement preparedStatement = connection.prepareStatement(SqlScript);
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
             ResultSet resultSet = preparedStatement.executeQuery();
             Table<OutputClass> table = new Table<OutputClass>(); 
+            
             while(resultSet.next())
             {
                 OutputClass newRow = outputClass.getDeclaredConstructor().newInstance();
-                newRow.parseOutputData(resultSet);
+                newRow.mapFromResultSet(resultSet);
                 table.addRow(newRow); 
             }
             return table;
         }
         catch(Exception e)
         {
-            System.out.println("CANNT GET DATA. SCRIPT:\n" + SqlScript + "\nERROR:\n" + e.getLocalizedMessage());
+            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + e.getStackTrace());
             return null;
         }
         
