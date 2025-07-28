@@ -1,14 +1,39 @@
 package com.highfaev.resources.sql;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
+
+
 public class SqlScripts {
-    public static String createUsersTable = "CREATE TABLE users(" +
-                "user_id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 1000000 CACHE 1 )," +
-                "nickname character varying(32) NOT NULL," +
-                "first_name text NOT NULL," +
-                "last_name text NOT NULL," +
-                "email text NOT NULL," +
-                "telegram character varying(32)," +
-                "bio text" +
-                ");";
-    public static String insertToUsers = "INSERT INTO users (nickname, first_name, last_name, email, telegram, bio) VALUES (?, ?, ?, ?, ?, ?)";
+    public static String createUsersTable;
+    public static String createRolesTable;
+    public static String insertToUsers;
+    public static String getAllUsers;
+    public static String insertToRoles;
+    public static void initialize() throws Exception
+    {
+        Field[] fields = SqlScripts.class.getDeclaredFields();
+        for(Field field: fields)
+        {
+            String pathToFile = "sql/scripts/" + field.getName() + ".sql";
+            InputStream in = SqlScripts.class.getClassLoader().getResourceAsStream(pathToFile);
+
+            if (in == null) {
+                System.out.println("Cannt find file: " + pathToFile);
+                continue;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                List<String> lines = reader.lines().collect(Collectors.toList());
+                String script = String.join(" ", lines);
+                field.set(null, script);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

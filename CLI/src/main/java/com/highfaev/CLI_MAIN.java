@@ -2,7 +2,6 @@ package com.highfaev;
 
 import java.sql.Connection;
 
-import com.highfaev.additional.TablesCreator;
 import com.highfaev.resources.helpers.SqlWrapper;
 import com.highfaev.resources.sql.*;
 
@@ -14,6 +13,11 @@ public class CLI_MAIN {
     public CLI_MAIN()
     {
         this.connection = SqlWrapper.connectToDatabase(this.databaseUrl, this.username, this.password);
+        try {
+            SqlScripts.initialize();
+        } catch (Exception e) {
+            System.out.println("Error while trying to initialize SqlScripts! " + e.getMessage());
+        }
     }
     public static void main(String[] args)
     {
@@ -34,29 +38,42 @@ public class CLI_MAIN {
             case "create-db":
                 cliMain.createDB(args);
                 break;
+            case "get-users":
+                cliMain.getUsers(args);
+                break;
+            case "add-role":
+                cliMain.addRole(args);
+                break;
             case "--help":
                 cliMain.printInfo();
                 break;
             default:
-                System.out.println("Unknow first parametr. use --help argument to get info");
+                System.out.println("Unknown first parametr. use --help argument to get info");
                 break;
         }
     }
     private void printInfo()
     {
-        System.out.println("add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separete lines\n"+
-                            "create-db //Use to create database on your postgresql server.\n");
+        System.out.println("add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separate lines\n"+
+                            "create-db //Use to create database on your postgresql server.\n"+
+                            "get-users //Use to get all data from users table\n"+
+                            "add-role //Use to add role. Enter name");
     }
     private void addUser(String[] args) throws Exception
     {
-        if(args.length != 7)
-        {
-            throw new Exception("Wrong amount of arguments. Use --help");
-        }
-        SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, new User(-1, args[1], args[2], args[3], args[4], args[5], args[6]));
+        SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, new User().create(args));
     }
     private void createDB(String[] args)
     {
         SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTable);
+        SqlWrapper.runSqlScript(this.connection, SqlScripts.createRolesTable);
+    }
+    private void getUsers(String[] args)
+    {
+        SqlWrapper.getData(connection, SqlScripts.getAllUsers, User.class).printTable();
+    }
+    private void addRole(String[] args)
+    {
+        SqlWrapper.insertData(connection, SqlScripts.insertToRoles, new Role().create(args));
     }
 }

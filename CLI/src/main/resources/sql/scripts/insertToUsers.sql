@@ -1,0 +1,1 @@
+INSERT INTO users (nickname, first_name, last_name, email, telegram, bio) VALUES (?, ?, ?, ?, ?, ?);
