@@ -7,11 +7,13 @@ import java.sql.SQLException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class User implements BasicSqlClassInterface{
+@NoArgsConstructor
+public class User implements BasicSqlClassInterface<User>{
     private int userId;
     private String nickname;
     private String firstName;
@@ -20,15 +22,10 @@ public class User implements BasicSqlClassInterface{
     @Builder.Default private String telegram = "None";
     @Builder.Default private String bio = "None";
 
-    public User()
-    {
-        //Empty constructor
-    }
-
-    public static User create(String[] args) throws Exception{
+    public User create(String[] args) throws IllegalArgumentException{
         if(args.length <= 4)
         {
-            throw new Exception("Wrong amount of arguments" + args.length + ". Use --help");
+            throw new IllegalArgumentException("Wrong amount of arguments" + args.length + ". Use --help");
         }
         UserBuilder builder = User.builder()
             .nickname(args[1])

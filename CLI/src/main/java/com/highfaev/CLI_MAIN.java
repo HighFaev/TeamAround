@@ -41,6 +41,9 @@ public class CLI_MAIN {
             case "get-users":
                 cliMain.getUsers(args);
                 break;
+            case "add-role":
+                cliMain.addRole(args);
+                break;
             case "--help":
                 cliMain.printInfo();
                 break;
@@ -53,18 +56,24 @@ public class CLI_MAIN {
     {
         System.out.println("add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separate lines\n"+
                             "create-db //Use to create database on your postgresql server.\n"+
-                            "get-users //Use to get all data from users table" );
+                            "get-users //Use to get all data from users table\n"+
+                            "add-role //Use to add role. Enter name");
     }
     private void addUser(String[] args) throws Exception
     {
-        SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, User.create(args));
+        SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, new User().create(args));
     }
     private void createDB(String[] args)
     {
         SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTable);
+        SqlWrapper.runSqlScript(this.connection, SqlScripts.createRolesTable);
     }
     private void getUsers(String[] args)
     {
         SqlWrapper.getData(connection, SqlScripts.getAllUsers, User.class).printTable();
+    }
+    private void addRole(String[] args)
+    {
+        SqlWrapper.insertData(connection, SqlScripts.insertToRoles, new Role().create(args));
     }
 }
