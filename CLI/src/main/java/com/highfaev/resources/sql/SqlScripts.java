@@ -16,7 +16,8 @@ public class SqlScripts {
     public static String insertToUsers;
     public static String getAllUsers;
     public static String insertToRoles;
-    public static String getUsersRoles;
+    public static String getUserRoles;
+    public static String getAllRoles;
     public static void initialize() throws Exception
     {
         Field[] fields = SqlScripts.class.getDeclaredFields();

@@ -1,12 +1,10 @@
 package com.highfaev;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 import com.highfaev.resources.helpers.SqlWrapper;
 import com.highfaev.resources.sql.*;
+import com.highfaev.resources.helpers.CreateParametrsArray;
 
 public class CLI_MAIN {
     private String databaseUrl = "jdbc:postgresql://localhost:5432/teamAround";
@@ -25,8 +23,6 @@ public class CLI_MAIN {
     public static void main(String[] args)
     {
         if(args.length == 0) {
-
-
             System.out.println("Hi from teamAround team! Use --help argument to get info");
             return;
         }
@@ -49,8 +45,11 @@ public class CLI_MAIN {
             case "add-role":
                 cliMain.addRole(args);
                 break;
+            case "get-roles":
+                cliMain.getRoles(args);
+                break;    
             case "get-user-roles":
-                cliMain.getUsersRoles(args);
+                cliMain.getUserRoles(args);
                 break;
             case "--help":
                 cliMain.printInfo();
@@ -73,34 +72,22 @@ public class CLI_MAIN {
     }
     private void createDB(String[] args)
     {
-        SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTable);
-        SqlWrapper.runSqlScript(this.connection, SqlScripts.createRolesTable);
-        SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTreeTable);
-        SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersRolesTable);
+        SqlWrapper.createDB(connection);
     }
     private void getUsers(String[] args)
     {
         SqlWrapper.getData(connection, SqlScripts.getAllUsers, User.class).printTable();
     }
-    private void getUsersRoles(String[] args)
+    private void getUserRoles(String[] args)
     {
-        try {
-            ArrayList<Object> parametrs = new ArrayList<>();
-            parametrs.add(Integer.parseInt(args[1]));
-            ResultSet resultSet = SqlWrapper.runSqlScript(connection, SqlScripts.getUsersRoles, parametrs);
-            while(resultSet.next())
-            {
-                UserRole userRole = new UserRole();
-                userRole.mapFromResultSet(resultSet);
-                System.out.println(userRole);
-            }
-        } catch (SQLException e) {
-            System.out.println("CANNT GET users_roles: " + e.getMessage());
-        }
-        
+        SqlWrapper.getData(connection, SqlScripts.getUserRoles, CreateParametrsArray.createParametrsArray(args) , UserRole.class).printTable();
     }
     private void addRole(String[] args)
     {
         SqlWrapper.insertData(connection, SqlScripts.insertToRoles, new Role().create(args));
+    }
+    private void getRoles(String[] args)
+    {
+        SqlWrapper.getData(connection, SqlScripts.getAllRoles, Role.class).printTable();
     }
 }

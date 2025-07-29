@@ -28,6 +28,7 @@ public class SqlWrapper {
         }
         
     }
+    
     public static void runSqlScript(Connection connection, String sqlScript)
     {
         try
@@ -40,6 +41,7 @@ public class SqlWrapper {
         }
         return;
     }
+    
     public static ResultSet runSqlScript(Connection connection, String sqlScript, ArrayList<Object> parametrs)
     {
         try
@@ -58,6 +60,15 @@ public class SqlWrapper {
             return null;
         }
     }
+    
+    public static void createDB(Connection connection)
+    {
+        SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTable);
+        SqlWrapper.runSqlScript(connection, SqlScripts.createRolesTable);
+        SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTreeTable);
+        SqlWrapper.runSqlScript(connection, SqlScripts.createUsersRolesTable);
+    }
+    
     public static <InsertClass extends BasicSqlClassInterface<InsertClass> & RealSqlClassInterface> void insertData(Connection connection, String sqlScript, InsertClass insertClass)
     {
         try
@@ -77,6 +88,34 @@ public class SqlWrapper {
         try
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            Table<OutputClass> table = new Table<OutputClass>(); 
+            
+            while(resultSet.next())
+            {
+                OutputClass newRow = outputClass.getDeclaredConstructor().newInstance();
+                newRow.mapFromResultSet(resultSet);
+                table.addRow(newRow); 
+            }
+            return table;
+        }
+        catch(Exception e)
+        {
+            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + e.getStackTrace());
+            return null;
+        }
+        
+    }
+
+    public static <OutputClass extends BasicSqlClassInterface<OutputClass>> Table<OutputClass> getData(Connection connection, String sqlScript, ArrayList<Object> parametrs, Class<OutputClass> outputClass)
+    {
+        try
+        {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
+            for(int index = 1; index <= parametrs.size(); index++)
+            {
+                preparedStatement.setObject(index, parametrs.get(index - 1));
+            }
             ResultSet resultSet = preparedStatement.executeQuery();
             Table<OutputClass> table = new Table<OutputClass>(); 
             

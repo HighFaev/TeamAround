@@ -1,0 +1,26 @@
+package com.highfaev.resources.helpers;
+
+import java.util.ArrayList;
+
+public class CreateParametrsArray {
+    public static ArrayList<Object> createParametrsArray(String[] args)
+    {
+        ArrayList<Object> parametrs = new ArrayList<Object>();
+        for(int index = 1; index < args.length; index++)
+        {
+            parametrs.add(
+                checkIfInteger(args[index]) ? Integer.parseInt(args[index]) : args[index]);
+        }
+        return parametrs;
+    }
+
+    public static boolean checkIfInteger(String s)
+    {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}

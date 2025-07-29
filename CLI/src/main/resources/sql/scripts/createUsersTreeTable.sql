@@ -1,4 +1,4 @@
-CREATE TABLE users_roles (
+CREATE TABLE users_tree (
     parent_user_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     PRIMARY KEY (parent_user_id, user_id),
