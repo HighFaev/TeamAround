@@ -12,12 +12,14 @@ public class SqlScripts {
     public static String createUsersTable;
     public static String createRolesTable;
     public static String createUsersRolesTable;
-    public static String createUsersTreeTable;
+    public static String createRelationTable;
     public static String insertToUsers;
     public static String getAllUsers;
     public static String insertToRoles;
     public static String getUserRoles;
     public static String getAllRoles;
+    public static String getRelations;
+    public static String insertToRelation;
     public static void initialize() throws Exception
     {
         Field[] fields = SqlScripts.class.getDeclaredFields();

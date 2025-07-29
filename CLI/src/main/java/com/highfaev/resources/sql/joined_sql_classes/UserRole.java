@@ -1,7 +1,9 @@
-package com.highfaev.resources.sql;
+package com.highfaev.resources.sql.joined_sql_classes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.highfaev.resources.sql.BasicSqlClassInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -4,6 +4,11 @@ import java.sql.Connection;
 
 import com.highfaev.resources.helpers.SqlWrapper;
 import com.highfaev.resources.sql.*;
+import com.highfaev.resources.sql.joined_sql_classes.RelationNicknames;
+import com.highfaev.resources.sql.joined_sql_classes.UserRole;
+import com.highfaev.resources.sql.real_sql_classes.Relation;
+import com.highfaev.resources.sql.real_sql_classes.Role;
+import com.highfaev.resources.sql.real_sql_classes.User;
 import com.highfaev.resources.helpers.CreateParametrsArray;
 
 public class CLI_MAIN {
@@ -29,15 +34,11 @@ public class CLI_MAIN {
 
         CLI_MAIN cliMain = new CLI_MAIN();
         switch (args[0]) {
-            case "add-user":
-                try {
-                    cliMain.addUser(args);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-                break;
             case "create-db":
                 cliMain.createDB(args);
+                break;
+            case "add-user":
+                cliMain.addUser(args);
                 break;
             case "get-users":
                 cliMain.getUsers(args);
@@ -51,6 +52,12 @@ public class CLI_MAIN {
             case "get-user-roles":
                 cliMain.getUserRoles(args);
                 break;
+            case "add-relation":
+                cliMain.addRelation(args);
+                break;
+            case "get-relations":
+                cliMain.getRelations(args);
+                break;
             case "--help":
                 cliMain.printInfo();
                 break;
@@ -61,33 +68,44 @@ public class CLI_MAIN {
     }
     private void printInfo()
     {
-        System.out.println("add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separate lines\n"+
-                            "create-db //Use to create database on your postgresql server.\n"+
+        System.out.println("create-db //Use to create database on your postgresql server.\n"+
+                            "add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separate lines\n"+                   
                             "get-users //Use to get all data from users table\n"+
-                            "add-role //Use to add role. Enter name");
+                            "add-role //Use to add role. Enter name\n"+
+                            "get-roles //Use to get all roles.\n"+
+                            "get-user-roles //Use to get roles for user. Enter user_id\n"+
+                            "get-relations //Use to get relations for user. Enter user_id\n");
     }
-    private void addUser(String[] args) throws Exception
+    private void addUser(String[] args)
     {
         SqlWrapper.insertData(this.connection, SqlScripts.insertToUsers, new User().create(args));
     }
     private void createDB(String[] args)
     {
-        SqlWrapper.createDB(connection);
+        SqlWrapper.createDB(this.connection);
     }
     private void getUsers(String[] args)
     {
-        SqlWrapper.getData(connection, SqlScripts.getAllUsers, User.class).printTable();
+        SqlWrapper.getData(this.connection, SqlScripts.getAllUsers, User.class).printTable();
     }
     private void getUserRoles(String[] args)
     {
-        SqlWrapper.getData(connection, SqlScripts.getUserRoles, CreateParametrsArray.createParametrsArray(args) , UserRole.class).printTable();
+        SqlWrapper.getData(this.connection, SqlScripts.getUserRoles, CreateParametrsArray.createParametrsArray(args) , UserRole.class).printTable();
     }
     private void addRole(String[] args)
     {
-        SqlWrapper.insertData(connection, SqlScripts.insertToRoles, new Role().create(args));
+        SqlWrapper.insertData(this.connection, SqlScripts.insertToRoles, new Role().create(args));
     }
     private void getRoles(String[] args)
     {
-        SqlWrapper.getData(connection, SqlScripts.getAllRoles, Role.class).printTable();
+        SqlWrapper.getData(this.connection, SqlScripts.getAllRoles, Role.class).printTable();
+    }
+    private void addRelation(String[] args)
+    {
+        SqlWrapper.insertData(this.connection, SqlScripts.insertToRelation, new Relation().create(args));
+    }
+    private void getRelations(String[] args)
+    {
+        SqlWrapper.getData(this.connection, SqlScripts.getRelations, CreateParametrsArray.createParametrsArray(args), RelationNicknames.class).printTable();
     }
 }

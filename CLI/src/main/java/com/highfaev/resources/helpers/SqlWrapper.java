@@ -65,7 +65,7 @@ public class SqlWrapper {
     {
         SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTable);
         SqlWrapper.runSqlScript(connection, SqlScripts.createRolesTable);
-        SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTreeTable);
+        SqlWrapper.runSqlScript(connection, SqlScripts.createRelationTable);
         SqlWrapper.runSqlScript(connection, SqlScripts.createUsersRolesTable);
     }
     
@@ -112,18 +112,21 @@ public class SqlWrapper {
         try
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
-            for(int index = 1; index <= parametrs.size(); index++)
+            System.out.println("ENTERED PARAMETRS\n" + parametrs);
+            for(int index = 0; index < parametrs.size(); index++)
             {
-                preparedStatement.setObject(index, parametrs.get(index - 1));
+                preparedStatement.setObject(index + 1, parametrs.get(index));
             }
+            System.out.println(preparedStatement);
             ResultSet resultSet = preparedStatement.executeQuery();
             Table<OutputClass> table = new Table<OutputClass>(); 
+
             
             while(resultSet.next())
             {
                 OutputClass newRow = outputClass.getDeclaredConstructor().newInstance();
                 newRow.mapFromResultSet(resultSet);
-                table.addRow(newRow); 
+                table.addRow(newRow);
             }
             return table;
         }
