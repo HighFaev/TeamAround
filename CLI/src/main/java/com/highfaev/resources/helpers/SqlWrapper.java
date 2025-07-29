@@ -2,6 +2,7 @@ package com.highfaev.resources.helpers;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.highfaev.resources.sql.*;
 
@@ -39,7 +40,25 @@ public class SqlWrapper {
         }
         return;
     }
-    public static <InsertClass extends BasicSqlClassInterface> void insertData(Connection connection, String sqlScript, InsertClass insertClass)
+    public static ResultSet runSqlScript(Connection connection, String sqlScript, ArrayList<Object> parametrs)
+    {
+        try
+        {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
+            for(int index = 1; index <= parametrs.size(); index++)
+            {
+                preparedStatement.setObject(index, parametrs.get(index - 1));
+            }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet;
+        }
+        catch(SQLException e)
+        {
+            System.out.println("CANNT RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
+            return null;
+        }
+    }
+    public static <InsertClass extends BasicSqlClassInterface<InsertClass> & RealSqlClassInterface> void insertData(Connection connection, String sqlScript, InsertClass insertClass)
     {
         try
         {
@@ -53,7 +72,7 @@ public class SqlWrapper {
         }
     }
     
-    public static <OutputClass extends BasicSqlClassInterface> Table<OutputClass> getData(Connection connection, String sqlScript, Class<OutputClass> outputClass)
+    public static <OutputClass extends BasicSqlClassInterface<OutputClass>> Table<OutputClass> getData(Connection connection, String sqlScript, Class<OutputClass> outputClass)
     {
         try
         {

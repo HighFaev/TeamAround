@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role implements BasicSqlClassInterface<Role>{
+public class Role implements BasicSqlClassInterface<Role>, RealSqlClassInterface{
     private int roleId;
     private String name;
 
@@ -33,7 +33,7 @@ public class Role implements BasicSqlClassInterface<Role>{
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT PARSE DATA IN users" + e.getMessage());
+            System.out.println("CANNT PARSE DATA IN role" + e.getMessage());
         }
     }
     public Role create(String[] args) throws IllegalArgumentException{

@@ -11,9 +11,12 @@ import java.util.stream.Collectors;
 public class SqlScripts {
     public static String createUsersTable;
     public static String createRolesTable;
+    public static String createUsersRolesTable;
+    public static String createUsersTreeTable;
     public static String insertToUsers;
     public static String getAllUsers;
     public static String insertToRoles;
+    public static String getUsersRoles;
     public static void initialize() throws Exception
     {
         Field[] fields = SqlScripts.class.getDeclaredFields();

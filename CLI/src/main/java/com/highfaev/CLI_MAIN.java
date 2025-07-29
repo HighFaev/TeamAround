@@ -1,6 +1,9 @@
 package com.highfaev;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import com.highfaev.resources.helpers.SqlWrapper;
 import com.highfaev.resources.sql.*;
@@ -22,6 +25,8 @@ public class CLI_MAIN {
     public static void main(String[] args)
     {
         if(args.length == 0) {
+
+
             System.out.println("Hi from teamAround team! Use --help argument to get info");
             return;
         }
@@ -43,6 +48,9 @@ public class CLI_MAIN {
                 break;
             case "add-role":
                 cliMain.addRole(args);
+                break;
+            case "get-user-roles":
+                cliMain.getUsersRoles(args);
                 break;
             case "--help":
                 cliMain.printInfo();
@@ -67,10 +75,29 @@ public class CLI_MAIN {
     {
         SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTable);
         SqlWrapper.runSqlScript(this.connection, SqlScripts.createRolesTable);
+        SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersTreeTable);
+        SqlWrapper.runSqlScript(this.connection, SqlScripts.createUsersRolesTable);
     }
     private void getUsers(String[] args)
     {
         SqlWrapper.getData(connection, SqlScripts.getAllUsers, User.class).printTable();
+    }
+    private void getUsersRoles(String[] args)
+    {
+        try {
+            ArrayList<Object> parametrs = new ArrayList<>();
+            parametrs.add(Integer.parseInt(args[1]));
+            ResultSet resultSet = SqlWrapper.runSqlScript(connection, SqlScripts.getUsersRoles, parametrs);
+            while(resultSet.next())
+            {
+                UserRole userRole = new UserRole();
+                userRole.mapFromResultSet(resultSet);
+                System.out.println(userRole);
+            }
+        } catch (SQLException e) {
+            System.out.println("CANNT GET users_roles: " + e.getMessage());
+        }
+        
     }
     private void addRole(String[] args)
     {

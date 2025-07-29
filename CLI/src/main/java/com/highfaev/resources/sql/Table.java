@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 
-public class Table<T extends BasicSqlClassInterface> {
+public class Table<T extends BasicSqlClassInterface<T>> {
     @Setter @Getter private ArrayList<T> table = new ArrayList<T>();
     public void addRow(T newRow)
     {
