@@ -38,7 +38,7 @@ public class SqlScripts {
                 String script = String.join(" ", lines);
                 field.set(null, script);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }

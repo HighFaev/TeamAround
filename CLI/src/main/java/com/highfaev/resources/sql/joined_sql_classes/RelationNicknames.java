@@ -18,6 +18,7 @@ public class RelationNicknames implements BasicSqlClassInterface<RelationNicknam
     String parentNickname;
     String childrenNickname;
 
+    @Override
     public RelationNicknames create(String[] args) throws IllegalArgumentException
     {
         if (args.length <= 2)
@@ -31,6 +32,7 @@ public class RelationNicknames implements BasicSqlClassInterface<RelationNicknam
         return userChildrenBuilder.build();
     }
 
+    @Override
     public void mapFromResultSet(ResultSet resultSet)
     {
         try {

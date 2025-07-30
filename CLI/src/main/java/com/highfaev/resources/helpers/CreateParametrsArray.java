@@ -5,11 +5,11 @@ import java.util.ArrayList;
 public class CreateParametrsArray {
     public static ArrayList<Object> createParametrsArray(String[] args)
     {
-        ArrayList<Object> parametrs = new ArrayList<Object>();
+        ArrayList<Object> parametrs = new ArrayList<>();
         for(int index = 1; index < args.length; index++)
         {
             parametrs.add(
-                checkIfInteger(args[index]) ? Integer.parseInt(args[index]) : args[index]);
+                checkIfInteger(args[index]) ? Integer.valueOf(args[index]) : args[index]);
         }
         return parametrs;
     }
@@ -17,9 +17,9 @@ public class CreateParametrsArray {
     public static boolean checkIfInteger(String s)
     {
         try {
-            Integer.parseInt(s);
+            Integer.valueOf(s);
             return true;
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return false;
         }
     }

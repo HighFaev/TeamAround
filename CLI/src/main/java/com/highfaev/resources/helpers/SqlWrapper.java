@@ -1,14 +1,18 @@
 package com.highfaev.resources.helpers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import com.highfaev.resources.sql.*;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.highfaev.resources.sql.BasicSqlClassInterface;
+import com.highfaev.resources.sql.RealSqlClassInterface;
+import com.highfaev.resources.sql.SqlScripts;
+import com.highfaev.resources.sql.Table;
 
 import lombok.Cleanup;
 
@@ -39,7 +43,6 @@ public class SqlWrapper {
         {
             System.out.println("CANNT RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
         }
-        return;
     }
     
     public static ResultSet runSqlScript(Connection connection, String sqlScript, ArrayList<Object> parametrs)
@@ -89,7 +92,7 @@ public class SqlWrapper {
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Table<OutputClass> table = new Table<OutputClass>(); 
+            Table<OutputClass> table = new Table<>(); 
             
             while(resultSet.next())
             {
@@ -99,9 +102,9 @@ public class SqlWrapper {
             }
             return table;
         }
-        catch(Exception e)
+        catch(IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException | SQLException e)
         {
-            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + e.getStackTrace());
+            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + Arrays.toString(e.getStackTrace()));
             return null;
         }
         
@@ -119,7 +122,7 @@ public class SqlWrapper {
             }
             System.out.println(preparedStatement);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Table<OutputClass> table = new Table<OutputClass>(); 
+            Table<OutputClass> table = new Table<>(); 
 
             
             while(resultSet.next())
@@ -130,9 +133,9 @@ public class SqlWrapper {
             }
             return table;
         }
-        catch(Exception e)
+        catch(IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException | SQLException  e)
         {
-            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + e.getStackTrace());
+            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + Arrays.toString(e.getStackTrace()));
             return null;
         }
         

@@ -17,17 +17,21 @@ import lombok.NoArgsConstructor;
 public class UserRole implements BasicSqlClassInterface<UserRole>{
     private String nickname;
     private String roleName;
+    @Override
     public UserRole create(String[] args) throws IllegalArgumentException
     {
         if(args.length <= 2)
         {
             throw new IllegalArgumentException("Wrong amount of arguments for User creation. Use --help");
         }
-        UserRoleBuilder builder = UserRole.builder()
-            .nickname(args[1])
-            .roleName(args[2]);
+        UserRoleBuilder builder;
+        builder = UserRole.builder()
+                .nickname(args[1])
+                .roleName(args[2]);
         return builder.build();
     }
+    
+    @Override
     public void mapFromResultSet(ResultSet resultSet)
     {
         try {
