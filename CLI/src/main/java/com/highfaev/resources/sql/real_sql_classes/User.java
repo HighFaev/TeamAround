@@ -1,8 +1,11 @@
-package com.highfaev.resources.sql;
+package com.highfaev.resources.sql.real_sql_classes;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.highfaev.resources.sql.BasicSqlClassInterface;
+import com.highfaev.resources.sql.RealSqlClassInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements BasicSqlClassInterface<User>{
+public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface{
     private int userId;
     private String nickname;
     private String firstName;
@@ -25,7 +28,7 @@ public class User implements BasicSqlClassInterface<User>{
     public User create(String[] args) throws IllegalArgumentException{
         if(args.length <= 4)
         {
-            throw new IllegalArgumentException("Wrong amount of arguments" + args.length + ". Use --help");
+            throw new IllegalArgumentException("Wrong amount of arguments for User creation. Use --help");
         }
         UserBuilder builder = User.builder()
             .nickname(args[1])
@@ -70,7 +73,7 @@ public class User implements BasicSqlClassInterface<User>{
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT PARSE DATA IN users" + e.getMessage());
+            System.out.println("CANNT PARSE DATA IN user" + e.getMessage());
         }
 
     }

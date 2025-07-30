@@ -1,0 +1,1 @@
+INSERT INTO relations (parent_user_id, children_user_id) VALUES (?, ?);
