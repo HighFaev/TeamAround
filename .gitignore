@@ -10,4 +10,4 @@ bin
 .idea
 
 #Ignore settings.json file with sensetive data
-settings.json
+**/settings.json
