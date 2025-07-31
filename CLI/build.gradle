@@ -3,7 +3,7 @@ plugins {
 }
 
 application{
-    mainClass = "com.highfaev.Main"
+    mainClass = "com.teamaround.Main"
 }
 
 repositories{
