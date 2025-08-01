@@ -1,4 +1,4 @@
-package com.highfaev.resources.sql;
+package com.teamaround.resources.sql;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -29,7 +29,7 @@ public class SqlScripts {
             InputStream in = SqlScripts.class.getClassLoader().getResourceAsStream(pathToFile);
 
             if (in == null) {
-                System.out.println("Cannt find file: " + pathToFile);
+                System.out.println("CAN'T FIND FILE: " + pathToFile);
                 continue;
             }
 
@@ -38,7 +38,7 @@ public class SqlScripts {
                 String script = String.join(" ", lines);
                 field.set(null, script);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }

@@ -3,6 +3,11 @@
 
 # Ignore Gradle build output directory
 build
+bin
 
+#Ignore IDE files
 .vscode
 .idea
+
+#Ignore settings.json file with sensetive data
+**/settings.json

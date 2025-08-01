@@ -1,4 +1,4 @@
-package com.highfaev.resources.sql;
+package com.teamaround.resources.sql;
 
 import java.sql.ResultSet;
 

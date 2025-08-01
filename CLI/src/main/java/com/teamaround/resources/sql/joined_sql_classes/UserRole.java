@@ -1,9 +1,9 @@
-package com.highfaev.resources.sql.joined_sql_classes;
+package com.teamaround.resources.sql.joined_sql_classes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.highfaev.resources.sql.BasicSqlClassInterface;
+import com.teamaround.resources.sql.BasicSqlClassInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,17 +17,21 @@ import lombok.NoArgsConstructor;
 public class UserRole implements BasicSqlClassInterface<UserRole>{
     private String nickname;
     private String roleName;
+    @Override
     public UserRole create(String[] args) throws IllegalArgumentException
     {
         if(args.length <= 2)
         {
             throw new IllegalArgumentException("Wrong amount of arguments for User creation. Use --help");
         }
-        UserRoleBuilder builder = UserRole.builder()
+        UserRoleBuilder builder;
+        builder = UserRole.builder()
             .nickname(args[1])
             .roleName(args[2]);
         return builder.build();
     }
+    
+    @Override
     public void mapFromResultSet(ResultSet resultSet)
     {
         try {
@@ -36,7 +40,7 @@ public class UserRole implements BasicSqlClassInterface<UserRole>{
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT PARSE DATA IN users" + e.getMessage());
+            System.out.println("CAN'T PARSE DATA IN users" + e.getMessage());
         }
 
     }

@@ -1,9 +1,9 @@
-package com.highfaev.resources.sql.joined_sql_classes;
+package com.teamaround.resources.sql.joined_sql_classes;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.highfaev.resources.sql.BasicSqlClassInterface;
+import com.teamaround.resources.sql.BasicSqlClassInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +18,7 @@ public class RelationNicknames implements BasicSqlClassInterface<RelationNicknam
     String parentNickname;
     String childrenNickname;
 
+    @Override
     public RelationNicknames create(String[] args) throws IllegalArgumentException
     {
         if (args.length <= 2)
@@ -31,6 +32,7 @@ public class RelationNicknames implements BasicSqlClassInterface<RelationNicknam
         return userChildrenBuilder.build();
     }
 
+    @Override
     public void mapFromResultSet(ResultSet resultSet)
     {
         try {
@@ -39,7 +41,7 @@ public class RelationNicknames implements BasicSqlClassInterface<RelationNicknam
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT PARSE DATA IN role" + e.getMessage());
+            System.out.println("CAN'T PARSE DATA IN role" + e.getMessage());
         }
     }
 }

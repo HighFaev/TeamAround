@@ -1,14 +1,18 @@
-package com.highfaev.resources.helpers;
+package com.teamaround.resources.helpers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import com.highfaev.resources.sql.*;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import com.teamaround.resources.sql.BasicSqlClassInterface;
+import com.teamaround.resources.sql.RealSqlClassInterface;
+import com.teamaround.resources.sql.SqlScripts;
+import com.teamaround.resources.sql.Table;
 
 import lombok.Cleanup;
 
@@ -22,7 +26,7 @@ public class SqlWrapper {
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT CONNECT TO DB!!!" + e.getMessage());
+            System.out.println("CAN'T CONNECT TO DB!!!" + e.getMessage());
 
             return null;
         }
@@ -37,26 +41,25 @@ public class SqlWrapper {
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
+            System.out.println("CAN'T RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
         }
-        return;
     }
     
-    public static ResultSet runSqlScript(Connection connection, String sqlScript, ArrayList<Object> parametrs)
+    public static ResultSet runSqlScript(Connection connection, String sqlScript, ArrayList<Object> parameters)
     {
         try
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
-            for(int index = 1; index <= parametrs.size(); index++)
+            for(int index = 1; index <= parameters.size(); index++)
             {
-                preparedStatement.setObject(index, parametrs.get(index - 1));
+                preparedStatement.setObject(index, parameters.get(index - 1));
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet;
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
+            System.out.println("CAN'T RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
             return null;
         }
     }
@@ -79,7 +82,7 @@ public class SqlWrapper {
         }
         catch (SQLException e)
         {
-            System.out.println("CANNT INSERT DATA. SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
+            System.out.println("CAN'T INSERT DATA. SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
         }
     }
     
@@ -89,7 +92,7 @@ public class SqlWrapper {
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Table<OutputClass> table = new Table<OutputClass>(); 
+            Table<OutputClass> table = new Table<>(); 
             
             while(resultSet.next())
             {
@@ -99,27 +102,26 @@ public class SqlWrapper {
             }
             return table;
         }
-        catch(Exception e)
+        catch(IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException | SQLException e)
         {
-            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + e.getStackTrace());
+            System.out.println("CAN'T GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + Arrays.toString(e.getStackTrace()));
             return null;
         }
         
     }
 
-    public static <OutputClass extends BasicSqlClassInterface<OutputClass>> Table<OutputClass> getData(Connection connection, String sqlScript, ArrayList<Object> parametrs, Class<OutputClass> outputClass)
+    public static <OutputClass extends BasicSqlClassInterface<OutputClass>> Table<OutputClass> getData(Connection connection, String sqlScript, ArrayList<Object> parameters, Class<OutputClass> outputClass)
     {
         try
         {
             PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
-            System.out.println("ENTERED PARAMETRS\n" + parametrs);
-            for(int index = 0; index < parametrs.size(); index++)
+            for(int index = 0; index < parameters.size(); index++)
             {
-                preparedStatement.setObject(index + 1, parametrs.get(index));
+                preparedStatement.setObject(index + 1, parameters.get(index));
             }
             System.out.println(preparedStatement);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Table<OutputClass> table = new Table<OutputClass>(); 
+            Table<OutputClass> table = new Table<>(); 
 
             
             while(resultSet.next())
@@ -130,9 +132,9 @@ public class SqlWrapper {
             }
             return table;
         }
-        catch(Exception e)
+        catch(IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException | SQLException  e)
         {
-            System.out.println("CANNT GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + e.getStackTrace());
+            System.out.println("CAN'T GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + Arrays.toString(e.getStackTrace()));
             return null;
         }
         

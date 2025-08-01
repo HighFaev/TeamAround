@@ -1,11 +1,11 @@
-package com.highfaev.resources.sql.real_sql_classes;
+package com.teamaround.resources.sql.real_sql_classes;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.highfaev.resources.sql.BasicSqlClassInterface;
-import com.highfaev.resources.sql.RealSqlClassInterface;
+import com.teamaround.resources.sql.BasicSqlClassInterface;
+import com.teamaround.resources.sql.RealSqlClassInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,15 +20,18 @@ public class Relation implements BasicSqlClassInterface<Relation>, RealSqlClassI
     private int parentUserId;
     private int childrenUserId;
     
+    @Override
     public void fillInsertParameters(PreparedStatement preparedStatement)
     {
         try {
             preparedStatement.setInt(1, this.parentUserId);
             preparedStatement.setInt(2, this.childrenUserId);
         } catch (SQLException e) {
-            System.out.println("CANNT INSERT DATA INTO STATEMENT " + e.getMessage());
+            System.out.println("CAN'T INSERT DATA INTO STATEMENT " + e.getMessage());
         }
     }
+
+    @Override
     public void mapFromResultSet(ResultSet resultSet)
     {
         try {
@@ -37,9 +40,11 @@ public class Relation implements BasicSqlClassInterface<Relation>, RealSqlClassI
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT PARSE DATA IN role" + e.getMessage());
+            System.out.println("CAN'T PARSE DATA IN role" + e.getMessage());
         }
     }
+
+    @Override
     public Relation create(String[] args) throws IllegalArgumentException{
         if(args.length <= 1)
         {

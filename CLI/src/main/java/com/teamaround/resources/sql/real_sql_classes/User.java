@@ -1,11 +1,11 @@
-package com.highfaev.resources.sql.real_sql_classes;
+package com.teamaround.resources.sql.real_sql_classes;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.highfaev.resources.sql.BasicSqlClassInterface;
-import com.highfaev.resources.sql.RealSqlClassInterface;
+import com.teamaround.resources.sql.BasicSqlClassInterface;
+import com.teamaround.resources.sql.RealSqlClassInterface;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +25,7 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
     @Builder.Default private String telegram = "None";
     @Builder.Default private String bio = "None";
 
+    @Override
     public User create(String[] args) throws IllegalArgumentException{
         if(args.length <= 4)
         {
@@ -46,6 +47,7 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
         return builder.build();
     } 
 
+    @Override
     public void fillInsertParameters(PreparedStatement preparedStatement)
     {
         try {
@@ -56,10 +58,11 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
             preparedStatement.setString(5, this.telegram);
             preparedStatement.setString(6, this.bio);
         } catch (SQLException e) {
-            System.out.println("CANNT INSERT DATA INTO STATEMENT " + e.getMessage());
+            System.out.println("CAN'T INSERT DATA INTO STATEMENT " + e.getMessage());
         }
     }
 
+    @Override
     public void mapFromResultSet(ResultSet resultSet)
     {
         try {
@@ -73,7 +76,7 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
         }
         catch(SQLException e)
         {
-            System.out.println("CANNT PARSE DATA IN user" + e.getMessage());
+            System.out.println("CAN'T PARSE DATA IN user" + e.getMessage());
         }
 
     }
