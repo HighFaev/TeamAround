@@ -22,8 +22,8 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
     private String firstName;
     private String lastName;
     private String email;
-    @Builder.Default private String telegram = "None";
-    @Builder.Default private String bio = "None";
+    @Builder.Default private String telegram = null;
+    @Builder.Default private String bio = null;
 
     @Override
     public User create(String[] args) throws IllegalArgumentException{
@@ -55,8 +55,14 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
             preparedStatement.setString(2, this.firstName);
             preparedStatement.setString(3, this.lastName);
             preparedStatement.setString(4, this.email);
-            preparedStatement.setString(5, this.telegram);
-            preparedStatement.setString(6, this.bio);
+            if(this.telegram != null)
+                preparedStatement.setString(5, this.telegram);
+            else
+                preparedStatement.setNull(5, java.sql.Types.VARCHAR);
+            if(this.bio != null)
+                preparedStatement.setString(6, this.bio);
+            else
+                preparedStatement.setNull(6, java.sql.Types.VARCHAR);
         } catch (SQLException e) {
             System.out.println("CAN'T INSERT DATA INTO STATEMENT " + e.getMessage());
         }

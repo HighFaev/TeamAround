@@ -31,7 +31,7 @@ public class CliCommandHandler {
     }
     public void getUsers(String[] args)
     {
-        SqlWrapper.getData(this.connection, SqlScripts.getAllUsers, User.class).printTable();
+        SqlWrapper.getData(this.connection, SqlScripts.getAllUsers, CreateParametersArray.createParametersArray(new String[0]), User.class).printTable();
     }
     public void getUserRoles(String[] args)
     {
@@ -43,7 +43,7 @@ public class CliCommandHandler {
     }
     public void getRoles(String[] args)
     {
-        SqlWrapper.getData(this.connection, SqlScripts.getAllRoles, Role.class).printTable();
+        SqlWrapper.getData(this.connection, SqlScripts.getAllRoles, CreateParametersArray.createParametersArray(new String[0]), Role.class).printTable();
     }
     public void addRelation(String[] args)
     {
@@ -57,12 +57,13 @@ public class CliCommandHandler {
     {
         System.out.println("""
                            create-db //Use to create database on your postgresql server.
-                           add-user //Use to add user. Enter nickname, first name, last name, email, telegram(optional), bio(optional) in separate lines
-                           get-users //Use to get all data from users table
-                           add-role //Use to add role. Enter name
+                           add-user //Use to add user. Provide nickname, first name, last name, email, telegram(optional), bio(optional).
+                           get-users //Use to get all data from users table.
+                           add-role //Use to add role. Provide name for the role.
                            get-roles //Use to get all roles.
-                           get-user-roles //Use to get roles for user. Enter user_id
-                           get-relations //Use to get relations for user. Enter user_id
+                           get-user-roles //Use to get roles for user. Provide user id.
+                           add-relation //Use to add relation. Provide parent user id and children user id.
+                           get-relations //Use to get relations for user. Provide user id.
                            """);
     }
 }
