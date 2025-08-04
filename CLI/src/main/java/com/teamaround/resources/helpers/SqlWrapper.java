@@ -30,18 +30,19 @@ public class SqlWrapper {
 
             return null;
         }
-        
     }
     
-    public static void runSqlScript(Connection connection, String sqlScript)
+    public static boolean runSqlScript(Connection connection, String sqlScript)
     {
         try
         {
             connection.createStatement().execute(sqlScript);
+            return true;
         }
         catch(SQLException e)
         {
             System.out.println("CAN'T RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
+            return false;
         }
     }
     
@@ -64,50 +65,37 @@ public class SqlWrapper {
         }
     }
     
-    public static void createDB(Connection connection)
+    public static boolean createDB(Connection connection)
     {
-        SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTable);
-        SqlWrapper.runSqlScript(connection, SqlScripts.createRolesTable);
-        SqlWrapper.runSqlScript(connection, SqlScripts.createRelationTable);
-        SqlWrapper.runSqlScript(connection, SqlScripts.createUsersRolesTable);
+        try
+        {
+            SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTable);
+            SqlWrapper.runSqlScript(connection, SqlScripts.createRolesTable);
+            SqlWrapper.runSqlScript(connection, SqlScripts.createRelationTable);
+            SqlWrapper.runSqlScript(connection, SqlScripts.createUsersRolesTable);
+            return true;
+        }
+        catch(Exception e)
+        {
+            System.out.println("CAN'T CREATE DB:\n" + e.getMessage());
+            return false;
+        }
     }
     
-    public static <InsertClass extends BasicSqlClassInterface<InsertClass> & RealSqlClassInterface> void insertData(Connection connection, String sqlScript, InsertClass insertClass)
+    public static <InsertClass extends BasicSqlClassInterface<InsertClass> & RealSqlClassInterface> boolean insertData(Connection connection, String sqlScript, InsertClass insertClass)
     {
         try
         {
             @Cleanup PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
             insertClass.fillInsertParameters(preparedStatement);
             preparedStatement.execute();
+            return true;
         }
         catch (SQLException e)
         {
             System.out.println("CAN'T INSERT DATA. SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
+            return false;
         }
-    }
-    
-    public static <OutputClass extends BasicSqlClassInterface<OutputClass>> Table<OutputClass> getData(Connection connection, String sqlScript, Class<OutputClass> outputClass)
-    {
-        try
-        {
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlScript);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Table<OutputClass> table = new Table<>(); 
-            
-            while(resultSet.next())
-            {
-                OutputClass newRow = outputClass.getDeclaredConstructor().newInstance();
-                newRow.mapFromResultSet(resultSet);
-                table.addRow(newRow); 
-            }
-            return table;
-        }
-        catch(IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException | SQLException e)
-        {
-            System.out.println("CAN'T GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + Arrays.toString(e.getStackTrace()));
-            return null;
-        }
-        
     }
 
     public static <OutputClass extends BasicSqlClassInterface<OutputClass>> Table<OutputClass> getData(Connection connection, String sqlScript, ArrayList<Object> parameters, Class<OutputClass> outputClass)
@@ -137,6 +125,5 @@ public class SqlWrapper {
             System.out.println("CAN'T GET DATA. SCRIPT:\n" + sqlScript + "\nERROR:\n" + Arrays.toString(e.getStackTrace()));
             return null;
         }
-        
     }
 }
