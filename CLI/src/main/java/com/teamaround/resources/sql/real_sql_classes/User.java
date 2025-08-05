@@ -55,14 +55,8 @@ public class User implements BasicSqlClassInterface<User>, RealSqlClassInterface
             preparedStatement.setString(2, this.firstName);
             preparedStatement.setString(3, this.lastName);
             preparedStatement.setString(4, this.email);
-            if(this.telegram != null)
-                preparedStatement.setString(5, this.telegram);
-            else
-                preparedStatement.setNull(5, java.sql.Types.VARCHAR);
-            if(this.bio != null)
-                preparedStatement.setString(6, this.bio);
-            else
-                preparedStatement.setNull(6, java.sql.Types.VARCHAR);
+            preparedStatement.setString(5, this.telegram);
+            preparedStatement.setString(6, this.bio);
         } catch (SQLException e) {
             System.out.println("CAN'T INSERT DATA INTO STATEMENT " + e.getMessage());
         }

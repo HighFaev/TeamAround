@@ -31,21 +31,7 @@ public class SqlWrapper {
             return null;
         }
     }
-    
-    public static boolean runSqlScript(Connection connection, String sqlScript)
-    {
-        try
-        {
-            connection.createStatement().execute(sqlScript);
-            return true;
-        }
-        catch(SQLException e)
-        {
-            System.out.println("CAN'T RUN SQL SCRIPT:\n" + sqlScript + "\nERROR CODE:\n" + e.getMessage());
-            return false;
-        }
-    }
-    
+     
     public static ResultSet runSqlScript(Connection connection, String sqlScript, ArrayList<Object> parameters)
     {
         try
@@ -69,10 +55,10 @@ public class SqlWrapper {
     {
         try
         {
-            SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTable);
-            SqlWrapper.runSqlScript(connection, SqlScripts.createRolesTable);
-            SqlWrapper.runSqlScript(connection, SqlScripts.createRelationTable);
-            SqlWrapper.runSqlScript(connection, SqlScripts.createUsersRolesTable);
+            SqlWrapper.runSqlScript(connection, SqlScripts.createUsersTable, CreateParametersArray.createParametersArray(new String[0]));
+            SqlWrapper.runSqlScript(connection, SqlScripts.createRolesTable, CreateParametersArray.createParametersArray(new String[0]));
+            SqlWrapper.runSqlScript(connection, SqlScripts.createRelationTable, CreateParametersArray.createParametersArray(new String[0]));
+            SqlWrapper.runSqlScript(connection, SqlScripts.createUsersRolesTable, CreateParametersArray.createParametersArray(new String[0]));
             return true;
         }
         catch(Exception e)
